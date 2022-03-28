@@ -41,7 +41,10 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Container(
           height: MediaQuery.of(context).size.height * 0.5,
           width: MediaQuery.of(context).size.width * 0.75,
-          color: Colors.blue,
+          decoration: const BoxDecoration(
+            color: Colors.blue,
+            shape: BoxShape.circle,
+          ),
           child: CustomPaint(
             painter: FlutterPainter(),
           ),
@@ -61,7 +64,7 @@ class FlutterPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     _paintLine(canvas, size);
 
-    _paintCircle(canvas, size);
+    // _paintCircle(canvas, size);
 
     _paintEyes(canvas, size);
 
@@ -70,14 +73,14 @@ class FlutterPainter extends CustomPainter {
 
   void _paintLine(Canvas canvas, Size size) {
     final painterLine = Paint()
-      ..color = Colors.red
+      ..color = Colors.lightGreenAccent
       ..strokeWidth = 5
       ..strokeCap = StrokeCap.round;
 
-    final start = 0.0;
-    final end = size.width;
+    final start = size.width * 0.25;
+    final end = size.width * 0.75;
 
-    final centerHeight = size.height * 0.5;
+    final centerHeight = size.height * 0.25;
 
     final startOffset = Offset(start, centerHeight);
     final endOffset = Offset(end, centerHeight);
@@ -87,7 +90,7 @@ class FlutterPainter extends CustomPainter {
 
   void _paintCircle(Canvas canvas, Size size) {
     final painterCircle = Paint()
-      ..color = Colors.red
+      ..color = Colors.lightGreenAccent
       ..strokeWidth = 5
       ..strokeCap = StrokeCap.round;
 
@@ -101,11 +104,11 @@ class FlutterPainter extends CustomPainter {
 
   void _paintEyes(Canvas canvas, Size size) {
     final painterCircle = Paint()
-      ..color = Colors.red
+      ..color = Colors.lightGreenAccent
       ..strokeWidth = 5
       ..strokeCap = StrokeCap.round;
 
-    final centerHeight = size.height * 0.65;
+    final centerHeight = size.height * 0.45;
     final centerWidthLeft = size.width * 0.40;
 
     final centerOffsetLeft = Offset(centerWidthLeft, centerHeight);
@@ -121,10 +124,10 @@ class FlutterPainter extends CustomPainter {
 
   void _paintSmile(Canvas canvas, Size size) {
     final painterSmile = Paint()
-      ..color = Colors.red
+      ..color = Colors.lightGreenAccent
       ..strokeWidth = 5
       ..style = PaintingStyle.stroke;
-    final rect = Rect.fromLTRB(60, 250, 250, 350);
+    final rect = Rect.fromLTRB(60, 200, 240, 300);
     final startAngle = 0.0;
     final sweepAngle = math.pi;
     final useCenter = false;
