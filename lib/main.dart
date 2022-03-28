@@ -31,6 +31,23 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+
+  var _showA = true;
+
+  final _textA = const Text(
+    'A',
+    style: TextStyle(
+      fontSize: 32.0,
+    ),
+  );
+
+  final _textB = const Text(
+    'B',
+    style: TextStyle(
+      fontSize: 32.0,
+    ),
+  );
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,102 +55,30 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: Container(
-          height: MediaQuery.of(context).size.height * 0.5,
-          width: MediaQuery.of(context).size.width * 0.75,
-          color: Colors.blue,
-          child: CustomPaint(
-            painter: FlutterPainter(),
-          ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            _showA
+                ? _textA
+                : _textB,
+            MaterialButton(
+                onPressed: () {
+                  setState(() {
+                    _showA = !_showA;
+                  });
+                },
+              color: Colors.blue,
+              child: const Text(
+                'Click Me!',
+                style: TextStyle(
+                  color: Colors.white
+                ),
+              ),
+            ),
+          ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
     );
-  }
-}
-
-class FlutterPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    _paintLine(canvas, size);
-
-    _paintCircle(canvas, size);
-
-    _paintEyes(canvas, size);
-
-    _paintSmile(canvas, size);
-  }
-
-  void _paintLine(Canvas canvas, Size size) {
-    final painterLine = Paint()
-      ..color = Colors.red
-      ..strokeWidth = 5
-      ..strokeCap = StrokeCap.round;
-
-    final start = 0.0;
-    final end = size.width;
-
-    final centerHeight = size.height * 0.5;
-
-    final startOffset = Offset(start, centerHeight);
-    final endOffset = Offset(end, centerHeight);
-
-    canvas.drawLine(startOffset, endOffset, painterLine);
-  }
-
-  void _paintCircle(Canvas canvas, Size size) {
-    final painterCircle = Paint()
-      ..color = Colors.red
-      ..strokeWidth = 5
-      ..strokeCap = StrokeCap.round;
-
-    final centerHeight = size.height * 0.25;
-    final centerWidth = size.width * 0.5;
-
-    final centerOffset = Offset(centerWidth, centerHeight);
-
-    canvas.drawCircle(centerOffset, 50.0, painterCircle);
-  }
-
-  void _paintEyes(Canvas canvas, Size size) {
-    final painterCircle = Paint()
-      ..color = Colors.red
-      ..strokeWidth = 5
-      ..strokeCap = StrokeCap.round;
-
-    final centerHeight = size.height * 0.65;
-    final centerWidthLeft = size.width * 0.40;
-
-    final centerOffsetLeft = Offset(centerWidthLeft, centerHeight);
-
-    canvas.drawCircle(centerOffsetLeft, 10.0, painterCircle);
-
-    final centerWidthRight = size.width * 0.60;
-
-    final centerOffsetRight = Offset(centerWidthRight, centerHeight);
-
-    canvas.drawCircle(centerOffsetRight, 10.0, painterCircle);
-  }
-
-  void _paintSmile(Canvas canvas, Size size) {
-    final painterSmile = Paint()
-      ..color = Colors.red
-      ..strokeWidth = 5
-      ..style = PaintingStyle.stroke;
-    final rect = Rect.fromLTRB(60, 250, 250, 350);
-    final startAngle = 0.0;
-    final sweepAngle = math.pi;
-    final useCenter = false;
-
-    canvas.drawArc(rect, startAngle, sweepAngle, useCenter, painterSmile);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return true;
   }
 }
