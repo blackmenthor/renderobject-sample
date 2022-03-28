@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 
 void main() {
@@ -32,21 +30,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
-  var _showA = true;
-
-  final _textA = const Text(
-    'A',
-    style: TextStyle(
-      fontSize: 32.0,
-    ),
-  );
-
-  final _textB = const Text(
-    'B',
-    style: TextStyle(
-      fontSize: 32.0,
-    ),
-  );
+  var _clicked = false;
 
   @override
   Widget build(BuildContext context) {
@@ -59,26 +43,109 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            _showA
-                ? _textA
-                : _textB,
-            MaterialButton(
-                onPressed: () {
-                  setState(() {
-                    _showA = !_showA;
-                  });
-                },
-              color: Colors.blue,
-              child: const Text(
-                'Click Me!',
-                style: TextStyle(
-                  color: Colors.white
-                ),
+            SizedBox(
+              height: 80.0,
+              width: 70.0,
+              child: HeartWidget(
+                heartColor: _clicked ? Colors.blue : Colors.pinkAccent,
               ),
             ),
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () {
+          setState(() {
+            _clicked = !_clicked;
+          });
+        },
+      ),
     );
   }
+}
+
+class HeartWidget extends LeafRenderObjectWidget {
+
+  final Color heartColor;
+
+  HeartWidget({
+      this.heartColor = Colors.pinkAccent,
+  });
+
+  @override
+  RenderObject createRenderObject(BuildContext context) {
+    return HeartRenderObject(heartColor: heartColor);
+  }
+
+  @override
+  void updateRenderObject(BuildContext context, HeartRenderObject renderObject) {
+    renderObject.heartColor = heartColor;
+  }
+
+}
+
+class HeartRenderObject extends RenderBox {
+
+  Color? _heartColor;
+
+  HeartRenderObject({
+    Color heartColor = Colors.pinkAccent,
+  }) {
+    _heartColor = heartColor;
+  }
+
+  Color? get heartColor => _heartColor;
+
+  set heartColor(Color? value) {
+    if (value == _heartColor) {
+      return;
+    }
+    _heartColor = value;
+    markNeedsPaint();
+    markNeedsSemanticsUpdate();
+  }
+
+  @override
+  Size computeDryLayout(BoxConstraints constraints) {
+    return Size(constraints.hasBoundedWidth ? constraints.maxWidth : 0,
+        constraints.hasBoundedHeight ? constraints.maxHeight : 0);
+  }
+
+  @override
+  bool get sizedByParent => true;
+
+  @override
+  bool get isRepaintBoundary => true;
+
+  @override
+  void paint(PaintingContext context, Offset offset) {
+    final canvas = context.canvas;
+
+    final paint = Paint()
+      ..color = heartColor!
+      ..style = PaintingStyle.fill
+      ..strokeCap = StrokeCap.round
+      ..strokeWidth = 5.0;
+
+    double width = size.width;
+    double height = size.height;
+
+    canvas.save();
+
+    Path path = Path();
+    path.moveTo(0.5 * width, height * 0.35);
+    path.cubicTo(0.2 * width, height * 0.1, -0.25 * width, height * 0.6,
+        0.5 * width, height);
+    path.moveTo(0.5 * width, height * 0.35);
+    path.cubicTo(0.8 * width, height * 0.1, 1.25 * width, height * 0.6,
+        0.5 * width, height);
+
+    canvas.drawPath(path, paint);
+
+    canvas.restore();
+  }
+
+
+
 }
