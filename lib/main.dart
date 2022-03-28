@@ -32,21 +32,8 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
-  var _showA = true;
-
-  final _textA = const Text(
-    'A',
-    style: TextStyle(
-      fontSize: 32.0,
-    ),
-  );
-
-  final _textB = const Text(
-    'B',
-    style: TextStyle(
-      fontSize: 32.0,
-    ),
-  );
+  final GlobalKey _textAKey = GlobalKey();
+  final GlobalKey _textBKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -58,22 +45,25 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
           children: [
-            _showA
-                ? _textA
-                : _textB,
-            MaterialButton(
-                onPressed: () {
-                  setState(() {
-                    _showA = !_showA;
-                  });
-                },
-              color: Colors.blue,
-              child: const Text(
-                'Click Me!',
-                style: TextStyle(
-                  color: Colors.white
+            AnchorWidget(
+              child: Container(
+                key: _textAKey,
+                height: 100.0,
+                width: 100.0,
+                constraints: const BoxConstraints(
+                  maxHeight: 100.0,
                 ),
+                decoration: const BoxDecoration(
+                  color: Colors.blue,
+                ),
+              ),
+            ),
+            AnchorWidget(
+              child: Text(
+                'Anchored Text',
+                key: _textBKey,
               ),
             ),
           ],
@@ -81,4 +71,65 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
+}
+
+class AnchorWidget extends StatelessWidget {
+
+  Widget child;
+
+  AnchorWidget({
+    required this.child,
+    Key? key,
+  }): super(key: key) {
+    assert(child.key != null);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final globalKey = child.key as GlobalKey?;
+    RenderBox? renderBox =
+    globalKey?.currentContext?.findRenderObject() as RenderBox?;
+
+    if (renderBox == null) {
+      return child;
+    }
+
+    final childHeight = renderBox.size.height;
+    final childWidth = renderBox.size.width;
+
+    const gap = 50.0;
+    const arrowSize = 32.0;
+    const offset = arrowSize/2;
+
+    final stackHeight = childHeight + gap;
+    final stackWidth = childWidth + gap;
+
+
+    return SizedBox(
+      height: stackHeight,
+      width: stackWidth,
+      child: Stack(
+        fit: StackFit.loose,
+        alignment: Alignment.center,
+        children: [
+          child,
+          const Positioned(
+            // bottom of the original child
+            bottom: (gap / 2) - offset,
+            // right of the original child
+            right: (gap / 2),
+            child: SizedBox(
+              height: 24.0,
+              width: 24.0,
+              child: Icon(
+                Icons.arrow_upward,
+                size: arrowSize,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
 }
