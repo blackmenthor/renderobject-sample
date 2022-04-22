@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:render_object/circle.dart';
+import 'package:render_object/half_triangle.dart';
+import 'package:render_object/heart.dart';
+import 'package:render_object/square.dart';
+import 'package:render_object/triangle.dart';
 
 void main() {
   runApp(const MyApp());
@@ -47,9 +52,52 @@ class _MyHomePageState extends State<MyHomePage> {
               height: 80.0,
               width: 70.0,
               child: HeartWidget(
-                heartColor: _clicked ? Colors.blue : Colors.pinkAccent,
+                color: _clicked ? Colors.blue : Colors.pinkAccent,
               ),
             ),
+            const SizedBox(
+              height: 16.0,
+            ),
+            // SizedBox(
+            //   height: 80.0,
+            //   width: 80.0,
+            //   child: TriangleWidget(
+            //     color: _clicked ? Colors.blue : Colors.pinkAccent,
+            //   ),
+            // ),
+            // const SizedBox(
+            //   height: 16.0,
+            // ),
+            // const SizedBox(
+            //   height: 16.0,
+            // ),
+            // SizedBox(
+            //   height: 80.0,
+            //   width: 80.0,
+            //   child: HalfTriangleWidget(
+            //     color: _clicked ? Colors.blue : Colors.pinkAccent,
+            //   ),
+            // ),
+            // const SizedBox(
+            //   height: 16.0,
+            // ),
+            // SizedBox(
+            //   height: 80.0,
+            //   width: 80.0,
+            //   child: SquareWidget(
+            //     color: _clicked ? Colors.blue : Colors.pinkAccent,
+            //   ),
+            // ),
+            // const SizedBox(
+            //   height: 64.0,
+            // ),
+            // SizedBox(
+            //   height: 80.0,
+            //   width: 80.0,
+            //   child: CircleWidget(
+            //     color: _clicked ? Colors.blue : Colors.pinkAccent,
+            //   ),
+            // ),
           ],
         ),
       ),
@@ -63,89 +111,4 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
-}
-
-class HeartWidget extends LeafRenderObjectWidget {
-
-  final Color heartColor;
-
-  HeartWidget({
-      this.heartColor = Colors.pinkAccent,
-  });
-
-  @override
-  RenderObject createRenderObject(BuildContext context) {
-    return HeartRenderObject(heartColor: heartColor);
-  }
-
-  @override
-  void updateRenderObject(BuildContext context, HeartRenderObject renderObject) {
-    renderObject.heartColor = heartColor;
-  }
-
-}
-
-class HeartRenderObject extends RenderBox {
-
-  Color? _heartColor;
-
-  HeartRenderObject({
-    Color heartColor = Colors.pinkAccent,
-  }) {
-    _heartColor = heartColor;
-  }
-
-  Color? get heartColor => _heartColor;
-
-  set heartColor(Color? value) {
-    if (value == _heartColor) {
-      return;
-    }
-    _heartColor = value;
-    markNeedsPaint();
-    markNeedsSemanticsUpdate();
-  }
-
-  @override
-  Size computeDryLayout(BoxConstraints constraints) {
-    return Size(constraints.hasBoundedWidth ? constraints.maxWidth : 0,
-        constraints.hasBoundedHeight ? constraints.maxHeight : 0);
-  }
-
-  @override
-  bool get sizedByParent => true;
-
-  @override
-  bool get isRepaintBoundary => true;
-
-  @override
-  void paint(PaintingContext context, Offset offset) {
-    final canvas = context.canvas;
-
-    final paint = Paint()
-      ..color = heartColor!
-      ..style = PaintingStyle.fill
-      ..strokeCap = StrokeCap.round
-      ..strokeWidth = 5.0;
-
-    double width = size.width;
-    double height = size.height;
-
-    canvas.save();
-
-    Path path = Path();
-    path.moveTo(0.5 * width, height * 0.35);
-    path.cubicTo(0.2 * width, height * 0.1, -0.25 * width, height * 0.6,
-        0.5 * width, height);
-    path.moveTo(0.5 * width, height * 0.35);
-    path.cubicTo(0.8 * width, height * 0.1, 1.25 * width, height * 0.6,
-        0.5 * width, height);
-
-    canvas.drawPath(path, paint);
-
-    canvas.restore();
-  }
-
-
-
 }
